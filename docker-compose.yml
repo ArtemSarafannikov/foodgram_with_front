@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: foodgram_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/foodgram
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: foodgram_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - api
+
+  postgres:
+    image: postgres:16
+    container_name: foodgram_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: foodgram
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
