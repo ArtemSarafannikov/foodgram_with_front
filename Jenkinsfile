@@ -45,8 +45,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker-compose -f ${DOCKER_COMPOSE_FILE} down frontend api
-                    docker-compose -f ${DOCKER_COMPOSE_FILE} up -d
+                    docker-compose -f ${DOCKER_COMPOSE_FILE} stop api frontend
+                    docker-compose -f ${DOCKER_COMPOSE_FILE} up -d api frontend
                     docker image prune -f
                 '''
             }
