@@ -46,6 +46,7 @@ pipeline {
             steps {
                 sh '''
                     docker-compose -f ${DOCKER_COMPOSE_FILE} stop api frontend
+                    docker rm foodgram_api foodgram_frontend
                     docker-compose -f ${DOCKER_COMPOSE_FILE} up -d api frontend
                     docker image prune -f
                 '''
