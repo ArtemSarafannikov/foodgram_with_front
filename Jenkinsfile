@@ -57,12 +57,12 @@ pipeline {
     post {
         success {
             script {
-                sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="Build success"'''
+                sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="Build success ✅"'''
             }
         }
         failure {
             script {
-                sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="Build failure"'''
+                sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="Build failure ❌"'''
             }
         }
     }
