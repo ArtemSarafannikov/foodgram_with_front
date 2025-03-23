@@ -9,9 +9,13 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/foodgram
+    networks:
+      - foodgram
+    restart: unless-stopped
 
   frontend:
     build:
@@ -24,9 +28,12 @@ services:
       - ../frontend/:/app/result_build/
     depends_on:
       - api
+    networks:
+      - foodgram
+    restart: unless-stopped
 
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: foodgram_postgres
     environment:
       POSTGRES_USER: postgres
@@ -36,6 +43,19 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./backend/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - foodgram
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d foodgram" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
 volumes:
   pgdata:
+
+networks:
+  foodgram:
+    driver: bridge
